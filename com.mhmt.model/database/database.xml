@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- 
+	<bean id="basitDataSource" class="org.apache.commons.dbcp2.BasicDataSources" destroy-method="close">
+		<property name="username"  value="root" ></property>
+		<property name="password"  value="12345" ></property>
+		<property name="driverClassName"  value="com.mysql.jdbc.Driver" ></property>
+		<property name="url"  value="jdbc:mysql://localhost:3306/employee" ></property>
+	
+	</bean>
+	
+	<bean id="driverManagerDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+		<property name="username"  value="root" ></property>
+		<property name="password"  value="12345" ></property>
+		<property name="driverClassName"  value="com.mysql.jdbc.Driver" ></property>
+		<property name="url"  value="jdbc:mysql://localhost:3306/employee" ></property>
+	
+	</bean>
+	 -->
+	 
+	<bean id="comboPooledDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
+		<property name="user"  value="root" ></property>
+		<property name="password"  value="12345" ></property>
+		<property name="driverClass"  value="com.mysql.jdbc.Driver" ></property>
+		<property name="jdbcUrl"  value="jdbc:mysql://localhost:3306/employee" ></property>
+		<property name="minPoolSize" value="5"></property>
+		<property name="maxPoolSize" value="100"></property>
+		<property name="acquireIncrement" value="10"></property>
+		<property name="maxStatements" value="200"></property>
+		<property name="idleConnectionTestPeriod" value="300"></property>
+		<property name="maxIdleTime" value="1"></property>
+	</bean>
+	
+	
+	<bean id="entityManageFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" >
+		<property name="dataSource" ref="comboPooledDataSource"></property>
+		<!-- 	<property name="persistenceUnitName" value="my-pu"></property> -->
+		<property name="jpaVendorAdapter" >
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"></bean>
+		</property>
+		<property name="packagesToScan" value="com.mhmt.domain"></property>
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.hbm2ddl_auto">create</prop>
+				<prop key="hibernate.dialect">hibernate.dialect.MySQL5Dialect</prop>
+			</props>
+		</property>
+	
+	</bean>
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManageFactory"></property>
+		
+	</bean>
+	<!-- <tx:annotation-driven transaction-manager="transactionManager"/> --> 
+	
+
+</beans>
