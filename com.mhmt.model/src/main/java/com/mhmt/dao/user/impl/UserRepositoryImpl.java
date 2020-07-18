@@ -1,69 +1,66 @@
 package com.mhmt.dao.user.impl;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
+import com.mhmt.dao.user.UserRepository;
+import com.mhmt.domain.user.User;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mhmt.dao.user.UserRepository;
-import com.mhmt.domain.user.User;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Repository
 @Transactional
-public class UserRepositoryImpl implements UserRepository{
-	
-	@PersistenceContext
-	private EntityManager entityManager;
+public class UserRepositoryImpl implements UserRepository {
 
-	@Override
-	public User saveUser(User user) {
-		entityManager.persist(user);
-		return user;
-	}
+    @PersistenceContext
+    private EntityManager entityManager;
 
-	@Override
-	public User updateUser(User user) {
-		User updatedUser = entityManager.merge(user);
-		return updatedUser;
-	}
+    @Override
+    public User saveUser(User user) {
+        entityManager.persist(user);
+        return user;
+    }
 
-	@Override
-	public User deleteUser(User user) {
-		if (entityManager.contains(user)) {
-			entityManager.remove(user);
-			return user;
-		}
-		User deleteUser = findUserById(user.getId());
-		entityManager.remove(deleteUser);
-		return deleteUser;
-	}
+    @Override
+    public User updateUser(User user) {
+        User updatedUser = entityManager.merge(user);
+        return updatedUser;
+    }
 
-	@Override
-	public User findUserById(Long id) {
-		return entityManager.find(User.class, id);
-	}
+    @Override
+    public User deleteUser(User user) {
+        if (entityManager.contains(user)) {
+            entityManager.remove(user);
+            return user;
+        }
+        User deleteUser = findUserById(user.getId());
+        entityManager.remove(deleteUser);
+        return deleteUser;
+    }
 
-	@Override
-	public User findUserByEmail(String email) {
-		return entityManager.createNamedQuery("User.findByEmail", User.class)
-				.setParameter("email", email)
-				.getSingleResult();
-	}
+    @Override
+    public User findUserById(Long id) {
+        return entityManager.find(User.class, id);
+    }
 
-	@Override
-	public User findUserByUsername(String username) {
-		return entityManager.createNamedQuery("User.findByUsername", User.class)
-				.setParameter("username", username)
-				.getSingleResult();
-				
-	}
+    @Override
+    public User findUserByEmail(String email) {
+        return entityManager.createNamedQuery("User.findByEmail", User.class)
+                .setParameter("email", email)
+                .getSingleResult();
+    }
 
-	@Override
-	public List<User> findAllUsers() {
-		return entityManager.createNamedQuery("User.findAll",User.class).getResultList();
-	}
+    @Override
+    public User findUserByUsername(String username) {
+        return entityManager.createNamedQuery("User.findByUsername", User.class)
+                .setParameter("username", username)
+                .getSingleResult();
+    }
+
+    @Override
+    public List<User> findAllUsers() {
+        return entityManager.createNamedQuery("User.findAll", User.class).getResultList();
+    }
 
 }

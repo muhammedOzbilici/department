@@ -1,130 +1,111 @@
 package com.mhmt.domain.user;
 
+import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "VerificationToken")
 @NamedQueries({
-	@NamedQuery(name = "VerificationToken.findByToken" , query = "SELECT v FROM VerificationToken v WHERE v.token = :token"),
-	@NamedQuery(name = "VerificationToken.findByUserId" , query = "SELECT v FROM VerificationToken v"
-			+ " WHERE v.userId = :userId"),
-	@NamedQuery(name = "VerificationToken.findAllExpiryDateLessThan" , query = "SELECT v "
-			+ " FROM VerificationToken v WHERE v.expiryDate < :expiryDate"),
-	@NamedQuery(name = "VerificationToken.deleteExpiryDateToken" , query = "SELECT v "
-			+ " FROM VerificationToken v WHERE v.date < :date")
+        @NamedQuery(name = "VerificationToken.findByToken", query = "SELECT v FROM VerificationToken v WHERE v.token = :token"),
+        @NamedQuery(name = "VerificationToken.findByUserId", query = "SELECT v FROM VerificationToken v"
+                + " WHERE v.userId = :userId"),
+        @NamedQuery(name = "VerificationToken.findAllExpiryDateLessThan", query = "SELECT v "
+                + " FROM VerificationToken v WHERE v.expiryDate < :expiryDate"),
+        @NamedQuery(name = "VerificationToken.deleteExpiryDateToken", query = "SELECT v "
+                + " FROM VerificationToken v WHERE v.date < :date")
 })
 public class VerificationToken {
-	
-	@Transient
-	private final int EXPIRY_DATE=60*24;
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
-	
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id")
-	private User user;
-	
-	@Column
-	private String token ;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date expiryDate;
-	
-	public VerificationToken() {
-		this.expiryDate=calculateExpiryDate(EXPIRY_DATE);
-	}
-	
-	public VerificationToken(User user , String token) {
-		this.token=token;
-		this.user=user;
-		this.expiryDate=calculateExpiryDate(EXPIRY_DATE);
-	}
+    @Transient
+    private final int EXPIRY_DATE = 60 * 24;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
+    @Column
+    private String token;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date expiryDate;
 
-	private Date calculateExpiryDate(int eXPIRY_DATE2) {
-		Calendar calendar=Calendar.getInstance();
-		calendar.setTimeInMillis(new Date().getTime());
-		calendar.add(Calendar.MINUTE, EXPIRY_DATE);
-		
-		return new Date(calendar.getTime().getTime());
-	}
+    public VerificationToken() {
+        this.expiryDate = calculateExpiryDate(EXPIRY_DATE);
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public VerificationToken(User user, String token) {
+        this.token = token;
+        this.user = user;
+        this.expiryDate = calculateExpiryDate(EXPIRY_DATE);
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    private Date calculateExpiryDate(int eXPIRY_DATE2) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(new Date().getTime());
+        calendar.add(Calendar.MINUTE, EXPIRY_DATE);
 
-	public User getUser() {
-		return user;
-	}
+        return new Date(calendar.getTime().getTime());
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getToken() {
-		return token;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setToken(String token) {
-		this.token = token;
-	}
+    public User getUser() {
+        return user;
+    }
 
-	public Date getExpiryDate() {
-		return expiryDate;
-	}
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-	public void setExpiryDate(Date expiryDate) {
-		this.expiryDate = expiryDate;
-	}
+    public String getToken() {
+        return token;
+    }
 
-	public int getEXPIRY_DATE() {
-		return EXPIRY_DATE;
-	}
+    public void setToken(String token) {
+        this.token = token;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
-	}
+    public Date getExpiryDate() {
+        return expiryDate;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		VerificationToken other = (VerificationToken) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
-	}
+    public void setExpiryDate(Date expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
+    public int getEXPIRY_DATE() {
+        return EXPIRY_DATE;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        VerificationToken other = (VerificationToken) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
 
 }
